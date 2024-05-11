@@ -3,7 +3,7 @@ import express from 'express'
 import connectDB from './DataBase/dbConnect.js';
 import {errorMiddleware} from './Middlewares/globalErrorHandler.js';
 import userRouter from './Routers/userRouter.js';
-
+import cookieParser from 'cookie-parser';
 
 const app=express();
 
@@ -11,7 +11,8 @@ const app=express();
 config({path:"./configuration/config.env"});
 
 connectDB();
-app.use(express.json())
+app.use(cookieParser());
+app.use(express.json());
 
 app.use('/api/v1/users',userRouter);
 

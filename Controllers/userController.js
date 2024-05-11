@@ -2,7 +2,7 @@ import asyncErrorHandler from "../Middlewares/asyncErrorHandler.js"
 import { ErrorHandler } from "../Middlewares/globalErrorHandler.js";
 import { User } from "../Models/userModel.js";
 import bcrypt from "bcrypt"
-import { sendToken } from "../Utils/jwtTokenSend.js";
+import { sendLogout, sendToken } from "../Utils/jwtTokenSend.js";
 // test
 
 export const fun=(req,res,next)=>{
@@ -73,5 +73,9 @@ export const login=asyncErrorHandler(async (req,res,next)=>{
     sendToken(res,user,200,"login successful");
 })
 
+
+export const logout=asyncErrorHandler((req,res,next)=>{
+  sendLogout(res,201,"Logout Successful");
+})
 
 
