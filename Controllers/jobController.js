@@ -8,6 +8,14 @@ export const test=(req,res,next)=>{
     })
 }
 
+export const getAllJob=asyncErrorHandler(async (req,res,next)=>{
+    const jobs=await Job.find({expired:false});
+    res.status(200).json({
+        message:"success",
+        jobs
+    });
+})
+
 export const postJob=asyncErrorHandler(async(req,res,next)=>{
  
     const {role}=req.user;

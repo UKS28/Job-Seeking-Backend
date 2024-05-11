@@ -24,8 +24,8 @@ Job model ✔
     "jobPostedOn": ,
     "postedBy":
 } 
-- get all the jobs
-- post an ew job
+- get all the jobs ✔
+- post a new job ✔
 - delete a job
 - update a particular job
 - 
