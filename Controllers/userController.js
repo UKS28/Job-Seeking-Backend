@@ -42,4 +42,36 @@ export const register=asyncErrorHandler(async (req,res,next)=>{
 )
 
 
+export const login=asyncErrorHandler(async (req,res,next)=>{
+    const { email,password,role }=req.body;
+    
+    // 1.Validation
+    if(!email || !password || !role)
+    {
+        return next(new ErrorHandler("all field are required",400));
+    }
+
+    const user=await User.findOne({email}).select("+password");
+
+    if(!user)
+    {
+        return next(new ErrorHandler("email id does not exist",400));
+    }
+    // console.log(user)
+    const compare=await bcrypt.compare(password,user.password);
+    if(!compare)
+    {
+        return next(new ErrorHandler("password does not match",400));
+    }
+
+    if(role!==user.role)
+    {
+        return next(new ErrorHandler("user does not exist with selected role",400));
+    }
+    
+    // 2.SEND RESPONSE
+    sendToken(res,user,200,"login successful");
+})
+
+
 
