@@ -81,3 +81,17 @@ export const editJob=asyncErrorHandler(async (req,res,next)=>{
         job
     });
 })
+
+export const getSingleJob=asyncErrorHandler(async (req,res,next)=>{
+    const { id }=req.params;
+    
+    const job=await Job.findById(id);
+    if(!job){
+        return next(new ErrorHandler("job not found",404));
+    }
+    res.status(200).json({
+        success:true,
+        message:"job found",
+        job
+    })
+})
