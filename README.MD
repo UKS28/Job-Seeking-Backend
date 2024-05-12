@@ -27,5 +27,6 @@ Job model ✔
 - get all the jobs ✔
 - post a new job ✔
 - delete a job
-- update a particular job
-- 
+- update a particular job ✔
+- get a particular job
+- get my jobs

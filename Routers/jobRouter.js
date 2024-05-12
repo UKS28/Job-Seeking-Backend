@@ -1,9 +1,10 @@
 import express from "express";
 import { isAuthenticate } from "../Middlewares/auth.js";
-import { getAllJob, postJob, test } from "../Controllers/jobController.js";
+import { editJob, getAllJob, postJob, test } from "../Controllers/jobController.js";
 
 const jobRouter=express.Router();
 // jobRouter.get('/',test);
-jobRouter.get('/',getAllJob);
-jobRouter.post('/',isAuthenticate,postJob)
+jobRouter.get('/getall',getAllJob);
+jobRouter.post('/post',isAuthenticate,postJob);
+jobRouter.put('/update/:id',isAuthenticate,editJob);
 export default jobRouter;
