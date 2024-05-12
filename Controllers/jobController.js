@@ -16,6 +16,20 @@ export const getAllJob=asyncErrorHandler(async (req,res,next)=>{
     });
 })
 
+export const getSingleJob=asyncErrorHandler(async (req,res,next)=>{
+    const { id }=req.params;
+    
+    const job=await Job.findById(id);
+    if(!job){
+        return next(new ErrorHandler("job not found",404));
+    }
+    res.status(200).json({
+        success:true,
+        message:"job found",
+        job
+    })
+})
+
 export const postJob=asyncErrorHandler(async(req,res,next)=>{
  
     const {role}=req.user;
@@ -82,16 +96,28 @@ export const editJob=asyncErrorHandler(async (req,res,next)=>{
     });
 })
 
-export const getSingleJob=asyncErrorHandler(async (req,res,next)=>{
-    const { id }=req.params;
+export const deleteJob=asyncErrorHandler(async (req,res,next)=>{
+    const {role}=req.user;
+    if(role!=="Employee"){
+        return next(new ErrorHandler("resouce not available to user",400))
+    }
     
+    const {id}=req.params;
     const job=await Job.findById(id);
     if(!job){
         return next(new ErrorHandler("job not found",404));
     }
+
+    if(!job.postedBy.equals(req.user._id)){
+        return next(new ErrorHandler("job is not yours",400));
+    }
+
+    await job.deleteOne();
     res.status(200).json({
         success:true,
-        message:"job found",
-        job
+        message:"Job deleted"
     })
+    
 })
+
+
