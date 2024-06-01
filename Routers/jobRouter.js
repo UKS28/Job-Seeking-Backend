@@ -4,10 +4,11 @@ import { deleteJob, editJob, getAllJob, getMyJobs, getSingleJob, postJob, test }
 
 const jobRouter=express.Router();
 // jobRouter.get('/',test);
+jobRouter.get('/getmyjobs', isAuthenticate, getMyJobs);
 jobRouter.get('/getall',getAllJob);
 jobRouter.get('/:id',getSingleJob);
-
 jobRouter.post('/post',isAuthenticate,postJob);
 jobRouter.put('/update/:id',isAuthenticate,editJob);
 jobRouter.delete('/delete/:id',isAuthenticate,deleteJob);
+
 export default jobRouter;
