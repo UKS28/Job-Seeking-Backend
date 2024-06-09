@@ -1,16 +1,17 @@
 ## Project Plan
-Error handling
+### Error handling
 - error handle middle ware
 - error handler
 - async error handler
 
-user model
-{ name, email, password, role}
+### User model
+{ name, email, password, role }
 - user register✔
 - user login✔
 - logout✔
 
-Job model ✔
+### Job model ✔
+
 {
     "company": "Microsoft",
     "country": "India",
@@ -24,9 +25,26 @@ Job model ✔
     "jobPostedOn": ,
     "postedBy":
 } 
+
 - get all the jobs ✔
 - post a new job ✔
 - delete a job ✔
 - update a particular job ✔
 - get a particular job ✔
-- get my jobs 
+- get my jobs ✔
+
+### Application Model
+{
+  resume,
+  username, email id, gender(enum) ,address , mobile no., date of birth,
+  userid, user type.(ref)
+  employee, empoyee type (ref)
+} ✔
+
+- testing ✔
+- post an application
+- get all application for a particular job - to be a employee 
+(as an employee i can post multiple jobs , if i click on each job it will show me some applications )
+- get all application of particular user - to be done by user
+- delete your application - done by user
+

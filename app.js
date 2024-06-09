@@ -5,6 +5,7 @@ import {errorMiddleware} from './Middlewares/globalErrorHandler.js';
 import userRouter from './Routers/userRouter.js';
 import cookieParser from 'cookie-parser';
 import jobRouter from './Routers/jobRouter.js';
+import applicationRouter from './Routers/applicationRouter.js';
 
 const app=express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/api/v1/users',userRouter);
 app.use('/api/v1/jobs',jobRouter);
+app.use('/api/v1/applications',applicationRouter);
 
 app.use(errorMiddleware);
 
