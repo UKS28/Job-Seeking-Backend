@@ -42,9 +42,9 @@
 } ✔
 
 - testing ✔
-- post an application
+- post an application ✔  + resume part ( cloudnary )
 - get all application for a particular job - to be a employee 
-(as an employee i can post multiple jobs , if i click on each job it will show me some applications )
+ (as an employee i can post multiple jobs , if i click on each job it will show me some   applications)
 - get all application of particular user - to be done by user
 - delete your application - done by user
 

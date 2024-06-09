@@ -24,8 +24,13 @@ const applicationSchema= new mongoose.Schema({
         require:[true,"please provide your contact number"]
     },
     DOB: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        require:[true,"please provide the Date of Birth"]
+    },
+    jobId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Job",
+        require:true,
     },
     applicantID: {
         user: {
@@ -47,7 +52,7 @@ const applicationSchema= new mongoose.Schema({
         },
         role: {
           type: String,
-          enum: ["Employer"],
+          enum: ["Employee"],
           required: true,
         }
     },
@@ -55,4 +60,4 @@ const applicationSchema= new mongoose.Schema({
 
 });
 
-export const Application=mongoose.Model("Application",applicationSchema);
+export const Application=mongoose.model("Application",applicationSchema);

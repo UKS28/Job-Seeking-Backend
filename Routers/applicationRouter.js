@@ -5,5 +5,6 @@ import { postApplication, test } from '../Controllers/applicationController.js';
 const applicationRouter=express.Router();
 
 applicationRouter.get('/',test);
+applicationRouter.post('/post/:jobId',isAuthenticate,postApplication);
 
 export default applicationRouter
