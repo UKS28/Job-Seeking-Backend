@@ -79,3 +79,40 @@ export const postApplication= asyncErrorHandler(async (req,res,next)=>{
 );
 
 
+export const getApplicationEmployee= asyncErrorHandler(async (req,res,next)=>{
+    const { role }= req.user;
+    if(role!=="Employee"){
+        return next(new ErrorHandler("resource not available",400));
+    }
+
+    const {jobId }= req.params;
+
+    const job=await Job.findById(jobId);
+
+    if(!job){
+        return next(new ErrorHandler("job does not exists",400));
+    }
+
+    const applications= await Application.find({"employerID.user":req.user._id, jobId:jobId});
+    res.status(200).json({
+        success:true,
+        applications,
+        message:"successfully get all the application for the job "
+    })
+})
+
+
+export const getApplicationJobSeeker=asyncErrorHandler(async (req,res,next)=>{
+    const { role }= req.user;
+    if(role!=="Job Seeker"){
+        return next(new ErrorHandler("resource not available",400));
+    }
+
+    const applications= await Application.find({"applicantID.user":req.user._id});
+    res.status(200).json({
+        success:true,
+        applications,
+        message:"successfully get all the application for the applicant"
+    })
+})
+
