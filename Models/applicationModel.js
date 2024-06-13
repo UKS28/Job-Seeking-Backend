@@ -69,7 +69,34 @@ const applicationSchema= new mongoose.Schema({
           required: true,
         }
     },
-    
+    jobDetails: {  
+      companyName: String,
+      companyMotto: String,
+      aboutCompany: String,
+      employeeCount: Number,
+      location: String,
+      role: String,
+      fixedSalary: Number,
+      experience: Number,
+      job_description: String,
+      skill: String,
+      jobType: {
+          type: String,
+          enum: ["Full Time", "Internship"]
+      },
+      jobMode: {
+          type: String,
+          enum: ["Remote", "Hybrid", "Onsite"]
+      }
+  },
+
+  status:{
+    type:String,
+    enum:["Active","Pending","Short Listed"],
+    default: "Pending"
+  }
+
+  
 
 });
 

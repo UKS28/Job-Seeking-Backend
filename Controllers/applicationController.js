@@ -2,6 +2,8 @@ import asyncErrorHandler from "../Middlewares/asyncErrorHandler.js";
 import { ErrorHandler } from "../Middlewares/globalErrorHandler.js";
 import { Application } from "../Models/applicationModel.js";
 import { Job } from "../Models/jobModel.js";
+import { sendApplicationStatusMail }from '../Utils/applicationStatusSend.js'
+
 
 export const test= (req,res,next)=>{
     res.json({
@@ -49,6 +51,8 @@ export const postApplication= asyncErrorHandler(async (req,res,next)=>{
     }
 
 
+
+
     if (
         !name ||
         !email ||
@@ -81,7 +85,8 @@ export const postApplication= asyncErrorHandler(async (req,res,next)=>{
         whyYou,
         jobId,
         applicantID,
-        employerID
+        employerID,
+        jobDetails:job
       });
     res.status(201).json({
         application,
@@ -115,7 +120,6 @@ export const getApplicationEmployee= asyncErrorHandler(async (req,res,next)=>{
     })
 })
 
-
 export const getApplicationJobSeeker=asyncErrorHandler(async (req,res,next)=>{
     const { role }= req.user;
     if(role!=="Job Seeker"){
@@ -124,26 +128,16 @@ export const getApplicationJobSeeker=asyncErrorHandler(async (req,res,next)=>{
 
     const applications= await Application.find({"applicantID.user":req.user._id});
 
-    // Step 2: Extract job IDs and fetch job details
-    const jobDetailsPromises = applications.map(async (application) => {
-      const job = await Job.findById(application.jobId);
-      return job;
-    });
-
-    // Wait for all job details to be fetched
-    const jobDetails = await Promise.all(jobDetailsPromises);
- 
-
 
     res.status(200).json({
         success:true,
-        jobDetails,
+        applications,
         message:"successfully get all the application for the applicant"
     })
 })
 
 
-export const alreadyApplied=asyncErrorHandler(async (req,res,next)=>{
+export const alreadyApplied= asyncErrorHandler(async (req,res,next)=>{
     const {role}=req.user;
     const { jobId }=req.params;
 
@@ -163,3 +157,57 @@ export const alreadyApplied=asyncErrorHandler(async (req,res,next)=>{
     })
 
 })
+
+
+export const editStatus = asyncErrorHandler(async (req, res, next) => {
+    const { role, _id } = req.user;
+  
+    // Ensure only employees can edit the status
+    if (role !== "Employee") {
+      return next(new ErrorHandler("Resource not available", 400));
+    }
+  
+    const { applicationId } = req.params;
+    const { status } = req.body;
+  
+    // Validate the required fields
+    if (!applicationId || !status) {
+      return next(new ErrorHandler("Application ID and new status are required", 400));
+    }
+  
+    // Find and update the application
+    const application = await Application.findById(applicationId);
+  
+    if (!application) {
+      return next(new ErrorHandler("Application not found", 404));
+    }
+  
+    // Ensure the employer making the request is the one who posted the job
+    if (application.employerID.user.toString() !== _id.toString()) {
+      return next(new ErrorHandler("You are not authorized to update this application", 403));
+    }
+  
+    application.status = status;
+    await application.save();
+  
+    // Send email if status is "Short Listed"
+    if (status === "Short Listed") {
+      const { email: ownerContact } = application;
+      const { role, companyName } = application.jobDetails;
+      
+      try {
+        await sendApplicationStatusMail(ownerContact, role, companyName);
+        console.log("Mail sent successfully");
+      } catch (error) {
+        return next(new ErrorHandler("server error while sending mail",500));
+        console.log("Error sending mail:", error);
+      }
+    }
+  
+    res.status(200).json({
+      success: true,
+      message: "Application status updated successfully",
+      application
+    });
+  });
+  
