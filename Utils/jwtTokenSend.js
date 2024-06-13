@@ -7,7 +7,7 @@ export const sendToken= (res,user,statusCode,message)=>{
         ),
         httpOnly: true, // Set httpOnly to true
         secure:true,
-        samesSite:"None"
+        sameSite: 'None'
     };
     
     res.status(statusCode).cookie("token",token,options).json({
@@ -28,7 +28,7 @@ export const sendLogout=(res,statusCode,message)=>{
         ),
         httpOnly: true, // Set httpOnly to true
         secure:true,
-        samesSite:"None"
+        sameSite: 'None'
     };
 
     res.status(statusCode).cookie("token",token,options).json({
