@@ -11,21 +11,34 @@ const applicationSchema= new mongoose.Schema({
         require:[true,"please provide mail id"],
         validate: [validator.isEmail, "Please provide a valid Email!"],
     },
+    contact:{
+      type:Number,
+      require:[true,"please provide your contact number"]
+    },
     gender:{
         type:String,
         enum:["Male","Female","Prefer Not to Say"]
     },
-    address:{
+    currentLocation:{
         type:String,
         require:[true,"please provide your address"]
     },
-    contact:{
-        type:Number,
-        require:[true,"please provide your contact number"]
-    },
-    DOB: {
+   
+    yearOfGraduation: {
         type: String,
-        require:[true,"please provide the Date of Birth"]
+        require:[true,"please provide the graduation year"]
+    },
+    experienceYear:{
+      type:Number,
+      require:[true,"please provide years of experience"]
+    },
+    skillSet:{
+      type:String,
+      require:[true,"provide atleast three skillsets"]
+    },
+    whyYou:{
+      type:String,
+      require:[true,"say any thing you want to say to recruiter"]
     },
     jobId:{
         type:mongoose.Schema.Types.ObjectId,

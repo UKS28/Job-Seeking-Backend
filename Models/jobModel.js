@@ -1,20 +1,37 @@
 import mongoose from "mongoose"
 
 const jobSchema= new mongoose.Schema({
-   company:{
+   companyName:{
     type:String,
     require:[true,"Company name required"]
    },
-   country: {
-    type: String,
-    required: [true, "Please provide a country name."],
-  },
+   companyMotto:{
+    type:String,
+    require:[true,"Motto required"]
+   },
+   aboutCompany:{
+    type:String,
+    require:[true,"About is required"]
+   },
+   employeeCount:{
+   type:Number,
+   require:[true,"Employee Count is require"]
+   },
    location:{
     type:String,
+    require:[true,"Job location Required"]
    },
-   position:{
+   role:{
     type:String,
-    require:[true,"job position required"]
+    require:[true,"job role required"]
+   },
+   fixedSalary:{
+    type:Number,
+    require:[true,"fixed salary required"]
+   },
+   experience:{
+    type:Number,
+    require:[true,"experience reuired"]
    },
    job_description:{
     type:String,
@@ -23,20 +40,23 @@ const jobSchema= new mongoose.Schema({
    },
    skill:{
     type:String,
+    require:[true,"skills are required"]
    },
-   fixedSalary:{
-    type:Number,
-    require:[true,"fixed salary required"]
-   },
-   expired: {
-    type: Boolean,
-    default: false,
+   jobType:{
+    type:String,
+    enum:["Full Time","Internship"],
   },
-  jobType:{
+  jobMode:{
     type:String,
     enum:["Remote","Hybrid","Onsite"],
   },
-  jobPostedOn: {
+
+   expired: {
+    type: Boolean,
+    default: false,
+   },
+
+   jobPostedOn: {
     type: Date,
     default: Date.now,
   },
@@ -48,5 +68,3 @@ const jobSchema= new mongoose.Schema({
 })
 
 export const Job=mongoose.model("Job",jobSchema);
-
-// { company name, job position, description, salary, required skills , location, remote or onsite,expires }

@@ -36,7 +36,7 @@ export const register=asyncErrorHandler(async (req,res,next)=>{
    });
 
 //    3.Send response
-   sendToken(res,newUser,200,"user registered successfully")
+   sendToken(res,newUser,200,"registeration successful")
 
 }
 )
@@ -76,6 +76,14 @@ export const login=asyncErrorHandler(async (req,res,next)=>{
 
 export const logout=asyncErrorHandler((req,res,next)=>{
   sendLogout(res,201,"Logout Successful");
+})
+
+export const getUser=asyncErrorHandler((req,res,next)=>{
+    const  user =req.user;
+    res.status(200).json({
+        success: true,
+        user,
+    });
 })
 
 

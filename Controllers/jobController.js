@@ -40,37 +40,45 @@ export const postJob=asyncErrorHandler(async(req,res,next)=>{
     }
 
     const { 
-        company,
-        country,
+        companyName,
+        companyMotto,
+        aboutCompany,
+        employeeCount,
         location,
-        position,
         job_description,
         skill,
         fixedSalary,
-        expired,
-        jobType}=req.body;
-
-    if(!company ||!country || !location || !position || !job_description || !skill || !fixedSalary || !jobType){
-        return next(new ErrorHandler("please provide complete detail",400))
-    }
-
-    const newJob=await Job.create({
-        company,
-        country,
-        location,
-        position,
-        job_description,
-        skill,
-        fixedSalary,
+        experience,
         jobType,
-        expired,
-        postedBy:req.user._id
-    })
-    res.status(201).json({
-        success:true,
+        jobMode
+      } = req.body;
+      
+      if (!companyName || !companyMotto || !aboutCompany || !employeeCount || !location || !role || !job_description || !skill || !fixedSalary || !experience || !jobType || !jobMode) {
+        return next(new ErrorHandler("Please provide complete details", 400));
+      }
+      
+      const newJob = await Job.create({
+        companyName,
+        companyMotto,
+        aboutCompany,
+        employeeCount,
+        location,
+        role,
+        job_description,
+        skill,
+        fixedSalary,
+        experience,
+        jobType,
+        jobMode,
+        postedBy: req.user._id
+      });
+      
+      res.status(201).json({
+        success: true,
         message:"job created successfully",
-        newJob
-    })
+        job: newJob
+      });
+    
 
 })
 
@@ -138,6 +146,5 @@ export const getMyJobs = asyncErrorHandler(async (req, res, next) => {
       myJobs,
     });
   });
-
 
 

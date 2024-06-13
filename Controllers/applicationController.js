@@ -30,10 +30,14 @@ export const postApplication= asyncErrorHandler(async (req,res,next)=>{
     const { 
         name,
         email,
-        gender,
-        address,
         contact,
-        DOB} =req.body;
+        gender,
+        currentLocation,
+        yearOfGraduation,
+        experienceYear,
+        skillSet,
+        whyYou
+      } = req.body;
 
     const applicantID={
         user:req.user._id,
@@ -45,33 +49,43 @@ export const postApplication= asyncErrorHandler(async (req,res,next)=>{
     }
 
 
-    if( !name||
-        !email||
-        !gender||
-        !address||
-        !contact||
-        !DOB) {
+    if (
+        !name ||
+        !email ||
+        !contact ||
+        !gender ||
+        !currentLocation ||
+        !yearOfGraduation ||
+        !experienceYear ||
+        !skillSet ||
+        !whyYou
+      ) {
             return next(new ErrorHandler("please fill all the details",400));
         }  
     const applications=await Application.find({jobId:jobId, email:email});
     if(applications.length>0){
-        return next(new ErrorHandler("applicant already exist",400));
+        // console.log(jobId, email);
+        // console.log(applications);
+        return next(new ErrorHandler("Already Applied",400));
     }
     
-    const application=await Application.create({
+    const application = await Application.create({
         name,
         email,
-        gender,
-        address,
         contact,
-        DOB,
+        gender,
+        currentLocation,
+        yearOfGraduation,
+        experienceYear,
+        skillSet,
+        whyYou,
         jobId,
         applicantID,
         employerID
-    });
+      });
     res.status(201).json({
         application,
-        message:"application posted",
+        message:"Application sent succesfully",
         success:true
     })
    
@@ -109,10 +123,43 @@ export const getApplicationJobSeeker=asyncErrorHandler(async (req,res,next)=>{
     }
 
     const applications= await Application.find({"applicantID.user":req.user._id});
+
+    // Step 2: Extract job IDs and fetch job details
+    const jobDetailsPromises = applications.map(async (application) => {
+      const job = await Job.findById(application.jobId);
+      return job;
+    });
+
+    // Wait for all job details to be fetched
+    const jobDetails = await Promise.all(jobDetailsPromises);
+ 
+
+
     res.status(200).json({
         success:true,
-        applications,
+        jobDetails,
         message:"successfully get all the application for the applicant"
     })
 })
 
+
+export const alreadyApplied=asyncErrorHandler(async (req,res,next)=>{
+    const {role}=req.user;
+    const { jobId }=req.params;
+
+    if(role!=="Job Seeker"){
+        return next(new ErrorHandler("resource not available",400));
+    }
+
+    const applications=await Application.find({jobId:jobId, "applicantID.user":req.user._id});
+    let final=false;
+    if(applications.length>0)    
+        final=true;
+
+    res.status(200).json({
+        success:true,
+        final,
+        message:"get result succesfully"
+    })
+
+})
